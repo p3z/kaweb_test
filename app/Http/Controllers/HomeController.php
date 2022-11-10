@@ -30,31 +30,28 @@ class HomeController
         // ]);
 
        
-
-        $test = self::recursive_calculate($pack_sizes, $widget_qty_ordered, [], $widget_qty_ordered );
-        
-        dd("Inside calculate_widgets",  ["Widgets ordered" => $widget_qty_ordered, 'Specific packs ordered' => $test] );
+        $calculation = self::recursive_calculate($pack_sizes, $widget_qty_ordered, [], $widget_qty_ordered );
+        $packs_selected = $calculation['packs_selected'];
+        $remainder = $calculation['remainder'];
+        dd("Inside calculate_widgets",  ["Widgets ordered" => $widget_qty_ordered, 'Specific packs ordered' => $packs_selected, 'remainder' => $remainder] );
     }
 
     
     private function recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected, $widget_qty_ordered, $counter = 0){
     
         // If no more choices, return the packs selected
-        if(count($available_choices) <= 0){
-            dd(
-                "Last iteration", 
-                ['available_choices' => $available_choices,
-                'remaining quantity needed' => $remaining_qty_needed,
-                'packs required' => $packs_selected,
-                'num widgets ordered' => $widget_qty_ordered,
-                'counter' => $counter
-                ]
-            );
-            return "bruh";
+        if(count($available_choices) == 0){
+            // dd(
+            //     "Last iteration", 
+            //     ['available_choices' => $available_choices,
+            //     'remaining quantity needed' => $remaining_qty_needed,
+            //     'packs required' => $packs_selected,
+            //     'num widgets ordered' => $widget_qty_ordered,
+            //     'counter' => $counter
+            //     ]
+            // );
+            return ['remainder' => $remaining_qty_needed, 'packs_selected' => $packs_selected];
         }
-
-
-        // Everything above here works as intended
 
         if($remaining_qty_needed >= $available_choices[0]){
 
@@ -64,8 +61,21 @@ class HomeController
             // Remove this amount from the qty
             $remaining_qty_needed -= $available_choices[0];
         }
-        // Everything below here works as intended
+
+
+        
         else {// remainder is less than pack size available...
+
+            // dd("Final clause",$remaining_qty_needed , $available_choices[0], $available_choices );
+
+            // if($remaining_qty_needed > $available_choices[0]){
+
+            //     // Add a final pack to cover excess
+            //     $packs_selected[] = $available_choices[0];
+
+            // }
+            
+
                 // so remove pack size from remaining choices
                 array_shift($available_choices);
         }
@@ -73,7 +83,7 @@ class HomeController
 
         $counter++;
 
-        self::recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected, $widget_qty_ordered, $counter);
+        return self::recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected, $widget_qty_ordered, $counter);
 
     }
 }
