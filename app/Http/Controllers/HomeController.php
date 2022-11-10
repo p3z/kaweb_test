@@ -13,6 +13,7 @@ class HomeController
 
     static function calculate_widgets(Request $request){      
 
+        // You'd usually query these from the db as a collection, convert it to an array with Laravel's toArray (or adjust the function to expect a collection)
         $pack_sizes = [
           250, 500, 1000, 2000, 5000,
         ];
@@ -23,39 +24,23 @@ class HomeController
 
         $widget_qty_ordered = $request->input('qty') ?? 0;        
 
-         // Not needed for this test, just use frontend validatin, quicker
+         // Not needed for this test, just use frontend validation, quicker
         // $validatedData = $request->validate([
         //   'qty' => 'min:1',
         // ]);
 
        
 
-        $test = self::recursive_calculate($pack_sizes, $widget_qty_ordered, $pack_sizes, $widget_qty_ordered );
+        $test = self::recursive_calculate($pack_sizes, $widget_qty_ordered, [], $widget_qty_ordered );
         
         dd("Inside calculate_widgets",  ["Widgets ordered" => $widget_qty_ordered, 'Specific packs ordered' => $test] );
     }
 
     
-    private function recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected = [], $widget_qty_ordered, $counter = 0){
+    private function recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected, $widget_qty_ordered, $counter = 0){
     
-        if($counter == 3){
-            
-            dd(
-                "Mid iteration", 
-                [
-                'available_choices' => $available_choices,
-                'remaining quantity needed' => $remaining_qty_needed,
-                'packs required' => $packs_selected,
-                'num widgets ordered' => $widget_qty_ordered,
-                'counter' => $counter
-                ]
-            );
-        }
-
-    
-
         // If no more choices, return the packs selected
-        if(count($available_choices) == 0){
+        if(count($available_choices) <= 0){
             dd(
                 "Last iteration", 
                 ['available_choices' => $available_choices,
@@ -74,20 +59,17 @@ class HomeController
         if($remaining_qty_needed >= $available_choices[0]){
 
             // Add pack to payload
-            $packs_selected["pack " . ($counter + 1)] = $available_choices[0];
+            $packs_selected[] = $available_choices[0];
 
             // Remove this amount from the qty
             $remaining_qty_needed -= $available_choices[0];
-        }        
-
-
-        // Everything below here works as intended
-
-        // If remainder is less than pack size available...
-        if($remaining_qty_needed < $available_choices[0]){
-            // Remove pack size from remaining choices
-            array_shift($available_choices);
         }
+        // Everything below here works as intended
+        else {// remainder is less than pack size available...
+                // so remove pack size from remaining choices
+                array_shift($available_choices);
+        }
+        
 
         $counter++;
 
