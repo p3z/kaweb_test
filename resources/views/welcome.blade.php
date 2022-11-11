@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Kaweb test</title>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,9 +17,13 @@
         </style>
 
         
-
+        {{-- Custom utils --}}
         <style>
-            /* Custom utils*/
+
+            .pointer{
+                cursor: pointer;
+            }
+           
             .pws-gradient-animation {
                     
                     background: linear-gradient(
@@ -30,6 +36,7 @@
                     );
                     background-size: 400% 400%;
                     animation: pws_gradient 15s ease infinite;
+                    
                     
                 }
 
@@ -49,7 +56,24 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
+                background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='29' height='50.115' patternTransform='scale(1) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(0,0%,100%,1)'/><path d='M14.498 16.858L0 8.488.002-8.257l14.5-8.374L29-8.26l-.002 16.745zm0 50.06L0 58.548l.002-16.745 14.5-8.373L29 41.8l-.002 16.744zM28.996 41.8l-14.498-8.37.002-16.744L29 8.312l14.498 8.37-.002 16.745zm-29 0l-14.498-8.37.002-16.744L0 8.312l14.498 8.37-.002 16.745z'  stroke-width='0.5' stroke='hsla(0, 0%, 0%, 1)' fill='none'/></pattern></defs><rect width='800%' height='800%' transform='translate(-22,-14.23)' fill='url(%23a)'/></svg>")      
             }
+
+            .main-container{
+                opacity: 0.97;
+            }
+
+            .widget-form__container{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background: rgba(255,255,255, 0.92 );
+                padding: 30px;
+            }            
+
+            .widget-form__image{
+                width: 50px;
+            }            
 
             .widget-form{
                 display: flex;
@@ -58,14 +82,19 @@
                 width: 100%;
                 height: 100%;
                 padding: 30px;
-                border: 2px solid black;
             }
 
             .widget-form__input{
-                margin: 15px 0;
+                margin: 5px 0;
             }
 
             .widget-form__input:nth-of-type(2){
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 10px;
+            }
+
+            .widget-form__input:nth-of-type(3){
                 border: 1px solid #000;
                 border-radius: 5px;
                 padding: 10px;
@@ -83,35 +112,59 @@
 
 
         </style>
-    </head>
-    <body>
-        <div class="pws-gradient-animation relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">             
 
-                <div class="mt-8 dark:bg-gray-800 shadow sm:rounded-lg p-6">  
-                            
-                    @if($errors)
-                        <div>
-                            @foreach($errors as $e)
-                                {{ $e }}
-                            @endforeach
-                        </div>
-                    @endif      
-                    
-                    <h1 class="widget-form__heading">Widget wrangler</h1>
-                                               
-                    <form class="widget-form" action="{{route('calculate_widgets')}}" method="POST">
-                        @csrf
-                        <label for="widget_qty">How many widgets you want...?</label>
-                        <input class = "widget-form__input" id="widget_qty" type="number" min="1" step="1" name="qty" placeholder="Whole numbers only">
-                        <input class="widget-form__input" type="submit" value="calculate">
-                    </form>
+        <script>
+            window.onload = () => {
+                let form = document.querySelector(".widget-form");
+                console.log(form)
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    let url = e.currentTarget.action;
 
-                    <h2 class="widget-form__response-heading"></h1>
-                    
-                   
-                </div>
+                    axios.post(url, {})
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+
+                }
+
 
            
-        </div>
+            }
+        </script>
+    </head>
+    <body>
+        <main class="main-container pws-gradient-animation relative flex justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">             
+
+            <div class="widget-form__container  ">  
+                        
+                @if($errors)
+                    <div>
+                        @foreach($errors as $e)
+                            {{ $e }}
+                        @endforeach
+                    </div>
+                @endif      
+                
+                <img class="widget-form__image" src="./widget-icon.png" />
+                <h1 class="widget-form__heading">Widget wrangler</h1>
+                
+                <form class="widget-form" action="{{route('calculate_widgets')}}" method="POST">
+                    @csrf
+                    <label for="widget_qty">How many widgets you want...?</label>
+                    <input class = "widget-form__input" id="widget_qty" type="number" min="1" step="1" name="qty" placeholder="Whole numbers only">
+                    <input class="widget-form__input pointer" type="submit" value="calculate">
+                </form>
+
+                <h2 class="widget-form__response-heading"></h1>
+                
+                
+            </div>
+           
+        </main>
     </body>
 </html>
