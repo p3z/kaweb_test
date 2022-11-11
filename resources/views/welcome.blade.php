@@ -118,16 +118,25 @@
                 let form = document.querySelector(".widget-form");
                 console.log(form)
                 form.onsubmit = (e) => {
-                    e.preventDefault();
-                    let url = e.currentTarget.action;
+                    // No need for this in test spec, but this was giving some weird behaviour on laragon -- ajax output different to loaded output. Revisit this, wd be good to know why
+                    // e.preventDefault();
+                    // let url = e.currentTarget.action;
 
-                    axios.post(url, {})
-                    .then(function (response) {
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                    // console.log("bruh")
+                    // console.log(e.currentTarget._token.value)
+                    // //alert("Hmm")
+
+                    // axios.post(url, {
+                    //      'qty': e.currentTarget.widget_qty,
+                    //      '_token': e.currentTarget._token.value
+                    // })
+                    // .then(function (response) {
+                    //     console.log("Ajax response")
+                    //     console.log(response.data);
+                    // })
+                    // .catch(function (error) {
+                    //     console.log(error);
+                    // });
 
 
                 }
@@ -149,18 +158,35 @@
                         @endforeach
                     </div>
                 @endif      
+
+                
                 
                 <img class="widget-form__image" src="./widget-icon.png" />
                 <h1 class="widget-form__heading">Widget wrangler</h1>
                 
                 <form class="widget-form" action="{{route('calculate_widgets')}}" method="POST">
                     @csrf
-                    <label for="widget_qty">How many widgets you want...?</label>
+                    <label for="widget_qty">How bruh widgets you want....?</label>
                     <input class = "widget-form__input" id="widget_qty" type="number" min="1" step="1" name="qty" placeholder="Whole numbers only">
                     <input class="widget-form__input pointer" type="submit" value="calculate">
                 </form>
-
-                <h2 class="widget-form__response-heading"></h1>
+                
+                @if (\Session::has('success'))
+                    <div class="alert alert-success">
+                      
+                        <h2 class="widget-form__response-heading">Packs selected</h2> 
+                    
+                        <?php
+                            $data = json_decode(\Session::get('success'));
+                            $packs = array_count_values($data->packs_selected);                            
+                        ?>
+                        <ul>
+                            @foreach($packs as $p => $qty)
+                                <li>{{ $p }} pack: {{ $qty }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 
                 
             </div>
