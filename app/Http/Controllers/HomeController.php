@@ -41,15 +41,6 @@ class HomeController
     
         // If no more choices, return the packs selected
         if(count($available_choices) == 0){
-            // dd(
-            //     "Last iteration", 
-            //     ['available_choices' => $available_choices,
-            //     'remaining quantity needed' => $remaining_qty_needed,
-            //     'packs required' => $packs_selected,
-            //     'num widgets ordered' => $widget_qty_ordered,
-            //     'counter' => $counter
-            //     ]
-            // );
             return ['remainder' => $remaining_qty_needed, 'packs_selected' => $packs_selected];
         }
 
@@ -66,14 +57,15 @@ class HomeController
         
         else {// remainder is less than pack size available...
 
-            // dd("Final clause",$remaining_qty_needed , $available_choices[0], $available_choices );
-
-            // if($remaining_qty_needed > $available_choices[0]){
-
-            //     // Add a final pack to cover excess
-            //     $packs_selected[] = $available_choices[0];
-
-            // }
+             // Handle excess at the penultimate step
+			if($remaining_qty_needed > 0 && count($available_choices) == 2 ){
+				
+				$choice = ($remaining_qty_needed > $available_choices[1]) ? 0 : 1;
+				$packs_selected[] = $available_choices[$choice];
+				
+				// Remove this amount from the qty
+	        	$remaining_qty_needed -= $available_choices[$choice];				
+			}
             
 
                 // so remove pack size from remaining choices
