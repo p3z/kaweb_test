@@ -147,7 +147,7 @@
         </script>
     </head>
     <body>
-        <main class="main-container pws-gradient-animation relative flex justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">             
+        <main class="main-container pws-gradient-animation relative flex justify-center bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">             
 
             <div class="widget-form__container  ">  
                         
@@ -161,12 +161,12 @@
 
                 
                 
-                <img class="widget-form__image" src="./widget-icon.png" />
+                <img class="widget-form__image" src="{{url('/widget-icon.png')}}" />
                 <h1 class="widget-form__heading">Widget wrangler</h1>
                 
                 <form class="widget-form" action="{{route('calculate_widgets')}}" method="POST">
                     @csrf
-                    <label for="widget_qty">How bruh widgets you want....?</label>
+                    <label for="widget_qty">Input required widget quantity:</label>
                     <input class = "widget-form__input" id="widget_qty" type="number" min="1" step="1" name="qty" placeholder="Whole numbers only">
                     <input class="widget-form__input pointer" type="submit" value="calculate">
                 </form>
