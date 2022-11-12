@@ -147,7 +147,7 @@
         </script>
     </head>
     <body>
-        <main class="main-container pws-gradient-animation relative flex justify-center bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">             
+        <main class="main-container pws-gradient-animation relative min-h-screen flex justify-center bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">             
 
             <div class="widget-form__container  ">  
                         
