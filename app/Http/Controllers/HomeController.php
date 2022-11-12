@@ -31,7 +31,7 @@ class HomeController
     }
 
     
-    private function recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected, $widget_qty_ordered, $counter = 0){
+    private static function recursive_calculate($available_choices, $remaining_qty_needed, $packs_selected, $widget_qty_ordered, $counter = 0){
 
         // return json_encode(['bruh' =>$available_choices, 'ordered' => $widget_qty_ordered, 'packs_selected' => $packs_selected, 'counter'=> $counter]);
     
